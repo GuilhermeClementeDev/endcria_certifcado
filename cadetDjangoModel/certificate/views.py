@@ -11,6 +11,11 @@ from .models import Certificate
 from .serializers import CertificateSerializer
 
 class  CertificateListCreateAPIView(APIView):
+    def get(self, request):
+        certificates = Certificate.objects.all()
+        serialized = CertificateSerializer(certificates, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
     def put(self, request):
         serialized = CertificateSerializer(data=request.data)
         if not serialized.is_valid():
