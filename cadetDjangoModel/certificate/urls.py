@@ -4,5 +4,6 @@ from django.urls import path
 from .views import CertificateListCreateAPIView
 
 urlpatterns = [
-    path('certificate/', CertificateListCreateAPIView.as_view()),
+    path('certificate/', CertificateListCreateAPIView.as_view(),name='certificate-list'),
+    path('certificates/<int:pk>/', CertificateListCreateAPIView.as_view(), name='certificate-update'),
 ]
