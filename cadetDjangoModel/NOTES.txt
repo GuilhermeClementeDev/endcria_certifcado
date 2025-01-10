@@ -1,0 +1,79 @@
+Sempre que eu precisar rodar algum comando para manipular o DJANGO,
+preciso colocar poetry run antes. Pois, todas as dependencias
+estão rodando no poetry.
+    RUN:
+        poetry run ...
+        poetry run code . -> vai fazer com que o VScode 
+            consiga rodar dentro do poetry.
+
+NOTES FOR MY DJANGO MODEL WITH ENDPOINT.
+    -> Vou estar usando o REST framework para fazer os endpoints da API.
+
+    -> Para esses endpoints, vou usar a APIView. É possível fazer com ViewSets
+    ou GenericViews tbm. Vou implementar depois todos os 3 endpoints para fins
+    de estudo. Mas acredito que para o projeto em si, usaremos a APIView.
+
+    -> A APIView não possui validação própria do método POST. Já os GenericViews
+    as ViewSets, possuem essa validaçaõ como builtin.
+
+Métodos HTTP.
+-> GET
+        if request.method == 'GET':
+            cadet = Cadet.objects.all()
+            serializer = CadetSerializer(cadet, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+-> POST
+        elif request.method == 'POST':
+            serializer = CadetSerializer(data=request.data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            validated_data = serializer.validated_data
+            serializer.create(validated_data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+-> PUT, PATCH e DELETE
+    "Vamos criar eles usando uma Class view, não uma function view
+    Pois eles precisam receber um valor de referencia do objeto desejado.
+    Isto é, para deletar algum objeto, você precisa informar qual."
+
+-> Class APIView based
+
+    -> Desse jeito, não é uma boa prática. Preciso entender melhor o motivo disso depois
+        class   CadetAPIView(APIView):
+            def get(self, request):
+                pass
+
+            def post(self, request):
+                pass
+
+            def put(self, request, pk):
+                pass
+
+            def patch(self, request, pk):
+                pass
+
+            def delete(self, request, pk):
+                pass
+
+    -> O ideal é dividirmos essa classe em duas classes menores
+            class   CadetListCreateAPIView(APIView):
+                def get(self, request):
+                    pass
+
+                def post(self, request):
+                    pass
+
+            class   CadetRetrieveUpdateDeleteAPIView(APIView):
+                def get(self, request, pk):
+                    pass
+
+                def put(self, request, pk):
+                    pass
+
+                def patch(self, request, pk):
+                    pass
+
+                def delete(self, request, pk):
+                    pass
+
