@@ -7,7 +7,7 @@ class Skill(models.Model):
 class Certificate(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(default="teste")
-    skills_required = models.ManyToManyField(Skill, related_name="certificates")
+    skills_required = models.ManyToManyField(Skill)
     issued_at = models.DateTimeField(auto_now_add=True)
 
 class UserSkill(models.Model):
