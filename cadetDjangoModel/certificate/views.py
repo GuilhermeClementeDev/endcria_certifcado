@@ -2,15 +2,18 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 # from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from django.http import HttpResponse
-
 from rest_framework import status
-
 from .models import Certificate, Skill
 from .serializers import CertificateSerializer, SkillSerializer
+from .permissions import HasRolePermission
+
 
 class  CertificateListCreateAPIView(APIView):
+    #Autenticação com Roles
+    #permission_classes = [HasRolePermission]
+    #HasRolePermission.required_roles = ['Admin', 'cadet']
+
     def get(self, request):
         certificates = Certificate.objects.all()
         serialized = CertificateSerializer(certificates, many=True)
@@ -24,20 +27,32 @@ class  CertificateListCreateAPIView(APIView):
         certificate = serialized.create(valid_data)
         return Response(CertificateSerializer(certificate).data, status=status.HTTP_201_CREATED)
 
-    def put(self, request, pk=None):
+class   CertificateRetrieveUpdateDeleteAPIView(APIView):
+    def get(self, request, pk):
+        certificate = Certificate.objects.get(id=pk)
+        serialized = CertificateSerializer(certificate)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
         try:
-        # Buscar o certificado pelo ID
-            certificate = Certificate.objects.get(pk=pk)
+            # Buscar o certificado pelo ID
+            certificate = Certificate.objects.get(id=pk)
         except Certificate.DoesNotExist:
             return Response({"error": "Certificate not found"},status=status.HTTP_404_NOT_FOUND)
     # Serializar os dados com a instância existente
-        serialized = CertificateSerializer(certificate, data=request.data, partial=False)
+        serialized = CertificateSerializer(data=request.data)
         if not serialized.is_valid():
             return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Atualizar os dados do certificado
-        certificate = serialized.save()  # Salva as alterações
-        return Response(CertificateSerializer(certificate).data, status=status.HTTP_200_OK)
+        valid_data = serialized.validated_data
+        serialized.update(certificate, valid_data)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk):
+        pass
+
+    def delete(self, request, pk):
+        pass
 
 
 

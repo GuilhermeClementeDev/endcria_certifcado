@@ -10,7 +10,7 @@ class   Cadet(models.Model):
     name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
     email = models.EmailField(max_length=254)
-    role_id = models.ForeignKey(Roles, on_delete=models.CASCADE)
+    role_id = models.ManyToManyField(Roles)
     about = models.CharField(max_length=254)
     presentation_video = models.URLField()
     #Urlflield tem como max_lenght default = 200
