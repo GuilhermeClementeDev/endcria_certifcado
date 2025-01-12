@@ -2,12 +2,13 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 # from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 from django.http import HttpResponse
+
 from rest_framework import status
+
 from .models import Certificate, Skill
 from .serializers import CertificateSerializer, SkillSerializer
-from .permissions import HasRolePermission
-
 
 class  CertificateListCreateAPIView(APIView):
     #Autenticação com Roles
@@ -44,16 +45,14 @@ class   CertificateRetrieveUpdateDeleteAPIView(APIView):
         if not serialized.is_valid():
             return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        valid_data = serialized.validated_data
+        valid_data = serialized._validated_data
         serialized.update(certificate, valid_data)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, pk):
-        pass
-
-    def delete(self, request, pk):
-        pass
 
 
-
-#class  SkillListCreateAPIView(APIView):
+class  SkillListCreateAPIView(APIView):
+    def get(self, request):
+        certificates = Skill.objects.all()
+        serialized = SkillSerializer(certificates, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)

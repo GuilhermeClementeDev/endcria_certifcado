@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Certificate, Skill
 
 class CertificateSerializer(serializers.ModelSerializer):
-    all_skills = serializers.PrimaryKeyRelatedField(
+    skills_required = serializers.PrimaryKeyRelatedField(
         queryset=Skill.objects.all(), many=True
     )
 
@@ -18,7 +18,7 @@ class CertificateSerializer(serializers.ModelSerializer):
         # Criando o certificado
         certificate = Certificate.objects.create(**validated_data)
         # Associando as habilidades
-        certificate.all_skills.set(skills)
+        certificate.skills_required.set(skills)
         return certificate
 
 class SkillSerializer(serializers.ModelSerializer):
