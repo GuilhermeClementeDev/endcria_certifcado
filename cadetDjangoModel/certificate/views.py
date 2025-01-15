@@ -7,9 +7,11 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from django.http import HttpResponse
 from rest_framework import status
-from .models import Certificate, Requirements
+from .models import Certificate, Requirements, Cadet, CertificadoPDF
 from .serializers import CertificateSerializer, RequirementsSerializer
 from .permissions import has_permission
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 
 class PermissionBaseAPIView(APIView):
@@ -109,20 +111,26 @@ class  CertificatePdfAPIView(APIView):
 
 
 class CertificateGeneretePdfAPIView(APIView):
-    def get(self, request, pk):
+    def get(self, request,id_user,pk):
         try:
+
             # Recupera o certificado
-            certificado = Certificado.objects.get(pk=pk)
-            
+            certificado = Certificate.objects.get(pk=pk)
+
+            #pegar o usuario
+            cadet = Cadet.objects.get(intra_id = id_user)
+
+            certificadoPDF = CertificadoPDF.objects.create(cadet=cadet,certificate=certificado)
+
             # Renderiza o template HTML
             html_string = render_to_string('certificado.html', {'certificado': certificado})
-            
+
             # Gera o PDF
             pdf = HTML(string=html_string).write_pdf()
-            
+
             # Retorna o PDF como resposta
             response = HttpResponse(pdf, content_type='application/pdf')
             response['Content-Disposition'] = f'attachment; filename="certificado_{certificado.id}.pdf"'
             return response
-        except Certificado.DoesNotExist:
+        except Certificate.DoesNotExist:
             return Response({'error': 'Certificado não encontrado.'}, status=status.HTTP_404_NOT_FOUND)

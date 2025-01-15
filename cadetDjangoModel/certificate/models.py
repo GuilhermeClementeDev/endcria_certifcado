@@ -1,6 +1,7 @@
 from django.db import models
 from cadet.models import Roles
 from cadet.models import Cadet
+import uuid
 
 class Requirements(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -37,3 +38,14 @@ class UserRequirements(models.Model):
         on_delete=models.CASCADE,
         related_name="user_skills"
     )
+
+class CertificadoPDF(models.Model):
+    id = models.UUIDField(
+        default=uuid.uuid1,
+        editable=False,
+        unique=True,
+        primary_key=True
+    )
+    cadet = models.ForeignKey(Cadet, on_delete=models.CASCADE,related_name="certificatepdf")
+    certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE, related_name="certificatepdf")
+    issued_at = models.DateField(auto_now_add=True)

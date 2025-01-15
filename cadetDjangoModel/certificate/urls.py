@@ -9,5 +9,5 @@ urlpatterns = [
     path('requirements/', RequirementsListCreateAPIView.as_view(),name='Requirements-list'),
     path('cadet/certificate/', CertificateListAPIView.as_view(),name='cadet-certificate'),
 	path('cadet/certificate/<pk>/', CertificatePdfAPIView.as_view(),name='cadet-certificate'),
-    path('certificados/<int:pk>/pdf/', CertificateGeneretePdfAPIView.as_view(), name='certificate-generate-pdf'),
+    path('certificados/<int:id_user>/<int:pk>/pdf/', CertificateGeneretePdfAPIView.as_view(), name='certificate-generate-pdf'),
 ]
