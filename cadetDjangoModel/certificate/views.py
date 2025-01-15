@@ -161,6 +161,8 @@ class CertificateGeneretePdfAPIView(APIView):
 
             # Retorna o PDF como resposta
             response = HttpResponse(pdf, content_type='application/pdf')
+            ## attachment -- donwload automatico
+            ## inline -- gera uma outra pagina mostrando o pdf
             response['Content-Disposition'] = f'attachment; filename="certificado_{certificado.id}.pdf"'
             return response
         except Certificate.DoesNotExist:
