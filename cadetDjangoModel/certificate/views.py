@@ -85,9 +85,23 @@ class  CertificateRetrieveUpdateDeleteAPIView(APIView):
         return Response({"message": "Certificate deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
-
 class  RequirementsListCreateAPIView(APIView):
     def get(self, request):
         certificates = Requirements.objects.all()
         serialized = RequirementsSerializer(certificates, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
+
+
+
+class  CertificateListAPIView(APIView):
+    def get(self, request):
+        certificates = Certificate.objects.all()
+        serialized = CertificateSerializer(certificates, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
+class  CertificatePdfAPIView(APIView):
+    def get(self, request, pk):
+        certificate = Certificate.objects.get(id=pk)
+        serialized = CertificateSerializer(certificate)
         return Response(serialized.data, status=status.HTTP_200_OK)
