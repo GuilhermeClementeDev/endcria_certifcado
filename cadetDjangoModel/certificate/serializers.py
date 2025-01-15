@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Certificate, Requirements
+from .models import Certificate, Requirements, UserRequirements
 
 class CertificateSerializer(serializers.ModelSerializer):
     requirements_required = serializers.PrimaryKeyRelatedField(
@@ -25,3 +25,15 @@ class RequirementsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Requirements
         fields = '__all__'
+
+
+class UserRequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserRequirements
+        fields = '__all__'
+
+    def create(self, validated_data):
+        try:
+            return UserRequirements.objects.create(**validated_data)
+        except Exception as e:
+            raise serializers.ValidationError({'detail': f'Error creating object: {str(e)}'})

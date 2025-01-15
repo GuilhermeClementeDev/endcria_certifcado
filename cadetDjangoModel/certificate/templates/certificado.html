@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .certificate-container {
+            border: 10px solid #000;
+            padding: 30px;
+            margin: 20px auto;
+            width: 80%;
+            background-color: #fdfdfd;
+        }
+        .certificate-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .certificate-content {
+            margin-top: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .certificate-footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+        .requirements {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: left;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate-container">
+        <h1 class="certificate-title">Certificado de Conclusão</h1>
+        <div class="certificate-content">
+            <p>Este certificado é concedido a:</p>
+            <h2>{{ cadet.name }} {{ cadet.last_name }}</h2>
+            <p>Por ter concluído os requisitos do certificado:</p>
+            <h3>{{ certificado.name }}</h3>
+        </div>
+        <div class="requirements">
+            <h4>Requisitos:</h4>
+            <ul>
+                {% for requirement in certificado.requirements_required.all %}
+                <li>{{ requirement.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="certificate-footer">
+            <p>ID do Certificado: {{ certificado_pdf.id }}</p>
+            <p>Emitido em: {{ certificado_pdf.issued_at }}</p>
+        </div>
+    </div>
+</body>
+</html>
