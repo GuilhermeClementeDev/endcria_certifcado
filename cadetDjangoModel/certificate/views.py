@@ -100,8 +100,29 @@ class  CertificateListAPIView(APIView):
         serialized = CertificateSerializer(certificates, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
+
 class  CertificatePdfAPIView(APIView):
     def get(self, request, pk):
         certificate = Certificate.objects.get(id=pk)
         serialized = CertificateSerializer(certificate)
         return Response(serialized.data, status=status.HTTP_200_OK)
+
+
+class CertificateGeneretePdfAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            # Recupera o certificado
+            certificado = Certificado.objects.get(pk=pk)
+            
+            # Renderiza o template HTML
+            html_string = render_to_string('certificado.html', {'certificado': certificado})
+            
+            # Gera o PDF
+            pdf = HTML(string=html_string).write_pdf()
+            
+            # Retorna o PDF como resposta
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="certificado_{certificado.id}.pdf"'
+            return response
+        except Certificado.DoesNotExist:
+            return Response({'error': 'Certificado não encontrado.'}, status=status.HTTP_404_NOT_FOUND)

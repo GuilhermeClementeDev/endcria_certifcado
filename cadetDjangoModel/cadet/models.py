@@ -18,3 +18,14 @@ class   Cadet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Article(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+
+class Permission(models.Model):
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    can_view = models.BooleanField(default=False)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+
